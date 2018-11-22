@@ -86,36 +86,37 @@ class MutableCircle extends Circle {
 public class LabW6Sol {
 
     public static void main(String[] args) {
-      Scanner sc = new Scanner(System.in);
-      String input = sc.next();
-      System.out.println(input);
-      if (input == "i") {
-        System.out.println("What shape do you want to create?");
-        args[0] =  sc.next();
-      };
-      switch (args[0]) {
-          case "s": {
-          Square shape = new Square(Integer.parseInt(args[1]));
-          Figure f1 = shape;
-          break;
-          }
-          case "r": {
-          Rectangle shape2 = new Rectangle(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-          Figure f1 = shape2;
-          break;
-          }
-          case "e": {
-          Ellipse shape3 = new Ellipse(Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-          Figure f1 = shape3;
-          break;
-          }
-          case "c": {
-          Circle shape4 = new Circle(Integer.parseInt(args[1]));
-          Figure f1 = shape4;
-          break;
-          }
-      }
+	Scanner sc = new Scanner(System.in);
+	// just initialized it to something to avoid errors;
+	Figure fig =  new Circle(25);
+
+	char command = args[0].charAt(0);
+
+	if (command == 'i'){
+		System.out.println("Enter r int int or s int, or x to exit ");
+		command = sc.next().charAt(0);
+		while (command != 'x') {
+		    switch (command) {
+		    case 'r': fig = new Rectangle(sc.nextInt(),sc.nextInt()); break;
+		    case 's': fig = new Square(sc.nextInt());
+			// other cases left as exercise
+		    }
+		    System.out.println(fig.toString());
+		    System.out.println("Enter r int int or s int, or x to exit ");
+		    command = sc.next().charAt(0);
+		}
+	}
+	else {
+	    switch (command){
+	    case 'r': fig = new Rectangle(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
+		break;
+	    case 's': fig = new Square(Integer.parseInt(args[1]));
+		break;
+	    }
+	    System.out.println(fig.toString());
+	}
     }
+
 
 	/* Notice the slight trickery here: because we have a method defined
            in MutableSquare but not in Figure, we allow the same object to have
