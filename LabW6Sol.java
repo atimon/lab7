@@ -17,6 +17,7 @@ abstract class Figure {
     public Color getColor() {return color;}
     public abstract double area();
     public abstract String toString();
+    public abstract void print(char font);
 }
 
 // We create protected data fields below so that subclasses can access them directly
@@ -35,6 +36,16 @@ class Rectangle extends Figure {
 
     public double area() {return height * width;}
     public String toString() {return ("rectangle of height "+height);}
+    public void print(char font){
+        System.out.println("");
+        for (int i = 0; i < this.height; i++) {
+            for (int j = 0; j < (this.width-1); j++) {
+                System.out.print(font + " ");
+            }
+            System.out.println(font);
+        }
+        System.out.println("");
+    }
 }
 
 
@@ -66,6 +77,9 @@ class Ellipse extends Figure {
 
     public double area() {return Math.PI * axis1 * axis2;}
     public String toString() {return ("ellipse of axis "+ axis1 + " and "+ axis2);}
+    public void print(char font){
+        System.out.println("PRINTING NOT YET IMPLEMENTED.");
+    }
 }
 
 
@@ -91,6 +105,7 @@ public class LabW6Sol {
 	Figure fig =  new Circle(25);
 
 	char command = args[0].charAt(0);
+    char font;
 
 	if (command == 'i'){
 		System.out.println("Enter r int int or s int, or x to exit ");
@@ -98,10 +113,14 @@ public class LabW6Sol {
 		while (command != 'x') {
 		    switch (command) {
 		    case 'r': fig = new Rectangle(sc.nextInt(),sc.nextInt()); break;
-		    case 's': fig = new Square(sc.nextInt());
-			// other cases left as exercise
+		    case 's': fig = new Square(sc.nextInt()); break;
+            case 'e': fig = new Ellipse(sc.nextInt(),sc.nextInt()); break;
+            case 'c': fig = new Circle(sc.nextInt()); break;
 		    }
 		    System.out.println(fig.toString());
+            System.out.println("What character do you wish to print?");
+            font = sc.next().charAt(0);
+            fig.print(font);
 		    System.out.println("Enter r int int or s int, or x to exit ");
 		    command = sc.next().charAt(0);
 		}
