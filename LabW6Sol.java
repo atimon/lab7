@@ -26,6 +26,36 @@ abstract class Figure {
 // We do not *have* to create get/set methods, if we do not want other classes to have
 // access to those data fields
 
+class Triangle extends Figure {
+    protected int side1;
+    protected int side2;
+    protected double side3;
+
+    public Triangle(int s1, int s2) {
+      side1 = s1;
+      side2 = s2;
+      side3 = Math.sqrt((s1*s1)+(s2*s2));
+    }
+
+    public double area() {return ((side1 * side2)/2);}
+    public String toString() {return ("triangle of hypothenuse "+side3);}
+    public void print(char font){
+        System.out.println("");
+        System.out.println(font);
+        for (int i = 0; i<(side1-2); i++) {
+          System.out.print(font);
+          for (int j = 0; j<i; j++){
+            System.out.print(" ");
+          }
+          System.out.println(font);
+        }
+        for (int k = 0; k < (side2); k++){
+          System.out.print(font);
+        }
+        System.out.println("");
+    }
+}
+
 class Rectangle extends Figure {
 
     protected int height;
@@ -114,8 +144,9 @@ public class LabW6Sol {
 		    switch (command) {
 		    case 'r': fig = new Rectangle(sc.nextInt(),sc.nextInt()); break;
 		    case 's': fig = new Square(sc.nextInt()); break;
-            case 'e': fig = new Ellipse(sc.nextInt(),sc.nextInt()); break;
-            case 'c': fig = new Circle(sc.nextInt()); break;
+        case 'e': fig = new Ellipse(sc.nextInt(),sc.nextInt()); break;
+        case 'c': fig = new Circle(sc.nextInt()); break;
+        case 't': fig = new Triangle(sc.nextInt(),sc.nextInt()); break;
 		    }
 		    System.out.println(fig.toString());
             System.out.println("What character do you wish to print?");
