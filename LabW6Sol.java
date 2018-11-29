@@ -37,11 +37,47 @@ class Triangle extends Figure {
       side3 = s3;
     }
 
-    public double area() {return ((side1 * side2)/2);}
-    public String toString() {return ("triangle of hypothenuse "+side3);}
-    public void print(int format){
-        System.out.println("Working");
+    public double area() {
+        int total = side1 + side2 + side3;
+        float s = (total/2f);
+        double result = Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
+        return result;
     }
+
+    public String toString() {return ("Triangle of area "+area());}
+    public void print(int format){
+        double height = ((2 * area())/ side1)/10;
+        double difference = ((1-height)/2);
+        double base = (side1/10f);
+        double p1x = ((1-base)/2);
+        double p2x = (p1x+base);
+        double p12y = difference;
+        double p3x = p1x+(Math.sqrt(((side2/10f)*(side2/10f))-(height*height)));
+        double p3y = 1-difference;
+        double xvalues[] = {p1x, p2x, p3x};
+        double yvalues[] = {p12y, p12y, p3y};
+        if (format == 1) {
+            StdDraw.filledPolygon(xvalues, yvalues);
+        }
+        else {
+            StdDraw.polygon(xvalues, yvalues);
+        }
+    }
+}
+
+class Isosceles extends Triangle {
+
+    protected int side1;
+    protected int side2;
+    public Isosceles(int x, int y){super (x,y,y); side1 = x; side2=y;}
+    public String toString() {return ("An isosceles triangle of area "+area());}
+}
+
+class Equilateral extends Isosceles {
+
+    protected int side;
+    public Equilateral(int s){super(s,s); side = s;}
+    public String toString() {return ("An equilateral triangle of area "+area());}
 }
 
 class Rectangle extends Figure {
@@ -53,16 +89,12 @@ class Rectangle extends Figure {
 	height = h; width=w;}
 
     public double area() {return height * width;}
-    public String toString() {return ("rectangle of height "+height);}
+    public String toString() {return ("Rectangle of area "+area());}
     public void print(int format){
         if (format == 1) {
-            StdDraw.clear();
-            StdDraw.setPenRadius(0.01);
             StdDraw.filledRectangle(0.5, 0.5, (this.width/20f), (this.height/20f));
         }
         else {
-            StdDraw.clear();
-            StdDraw.setPenRadius(0.01);
             StdDraw.rectangle(0.5, 0.5, (this.width/20f), (this.height/20f));
         }
     }
@@ -74,7 +106,7 @@ class Square extends Rectangle {
     protected int side;
     public Square(int s){ super(s,s); side = s;}
     public double area() {return side * side;}
-    public String toString() {return ("a square of side "+side);}
+    public String toString() {return ("A square of area "+area());}
 }
 
 // Because side in Square is protected, not private, we are able to access it directly
@@ -96,16 +128,12 @@ class Ellipse extends Figure {
 	axis1 = h; axis2 = w;}
 
     public double area() {return Math.PI * axis1 * axis2;}
-    public String toString() {return ("ellipse of axis "+ axis1 + " and "+ axis2);}
+    public String toString() {return ("Ellipse of area "+ area());}
     public void print(int format){
         if (format ==  1) {
-            StdDraw.clear();
-            StdDraw.setPenRadius(0.01);
             StdDraw.filledEllipse(0.5, 0.5, (this.axis1/20f), (this.axis2/20f));
         }
         else {
-            StdDraw.clear();
-            StdDraw.setPenRadius(0.01);
             StdDraw.ellipse(0.5, 0.5, (this.axis1/20f), (this.axis2/20f));
         }
     }
@@ -117,7 +145,7 @@ class Circle extends Ellipse {
     protected int radius;
     public Circle(int s){ super(s,s); radius = s;}
     public double area() {return Math.PI * Math.pow(radius, 2);}
-    public String toString() {return ("a circle of radius "+ radius);}
+    public String toString() {return ("A circle of area "+ area());}
 }
 
 
@@ -129,54 +157,52 @@ class MutableCircle extends Circle {
 public class LabW6Sol {
 
     public static void main(String[] args) {
-	Scanner sc = new Scanner(System.in);
-	// just initialized it to something to avoid errors;
-	Figure fig =  new Circle(25);
-
-	char command = args[0].charAt(0);
-
-	if (command == 'i'){
-		System.out.println("Enter shape and sizes or 'X' to exit");
-		command = sc.next().charAt(0);
-		while (command != 'x') {
-		    switch (command) {
-		    case 'r': fig = new Rectangle(sc.nextInt(),sc.nextInt()); break;
-		    case 's': fig = new Square(sc.nextInt()); break;
+    	Scanner sc = new Scanner(System.in);
+        StdDraw.setPenRadius(0.01);
+    	// just initialized it to something to avoid errors;
+    	Figure fig =  new Circle(25);
+        char command = ' ';
+    	System.out.println("Enter shape and sizes or press h for help");
+    	command = sc.next().charAt(0);
+    	while (command != 'x') {
+            StdDraw.clear();
+    	    switch (command) {
+    	    case 'r': fig = new Rectangle(sc.nextInt(),sc.nextInt()); break;
+    	    case 's': fig = new Square(sc.nextInt()); break;
             case 'e': fig = new Ellipse(sc.nextInt(),sc.nextInt()); break;
             case 'c': fig = new Circle(sc.nextInt()); break;
             case 't': fig = new Triangle(sc.nextInt(),sc.nextInt(),sc.nextInt()); break;
-		    }
-		    System.out.println(fig.toString());
-            System.out.println("Choose the color of the shape");
-            char clr = sc.next().charAt(0);
-            switch (clr) {
-                case 'b': StdDraw.setPenColor(StdDraw.BLUE); break;
-                case 'r': StdDraw.setPenColor(StdDraw.RED); break;
-                case 'p': StdDraw.setPenColor(StdDraw.PINK); break;
-                case 'y': StdDraw.setPenColor(StdDraw.YELLOW); break;
-                case 'w': StdDraw.setPenColor(StdDraw.WHITE); break;
-                case 'g': StdDraw.setPenColor(StdDraw.GREEN); break;
-                case 'o': StdDraw.setPenColor(StdDraw.ORANGE); break;
-                default: StdDraw.setPenColor(StdDraw.BLACK); break;
+            case 'i': fig = new Isosceles(sc.nextInt(),sc.nextInt()); break;
+            case 'q': fig = new Equilateral(sc.nextInt()); break;
+            case 'h': help();
+    	    }
+            if (command != 'h') {
+        	    System.out.println(fig.toString());
+                System.out.println("Choose the color of the shape");
+                char clr = sc.next().charAt(0);
+                switch (clr) {
+                    case 'b': StdDraw.setPenColor(StdDraw.BLUE); break;
+                    case 'r': StdDraw.setPenColor(StdDraw.RED); break;
+                    case 'p': StdDraw.setPenColor(StdDraw.PINK); break;
+                    case 'y': StdDraw.setPenColor(StdDraw.YELLOW); break;
+                    case 'w': StdDraw.setPenColor(StdDraw.WHITE); break;
+                    case 'g': StdDraw.setPenColor(StdDraw.GREEN); break;
+                    case 'o': StdDraw.setPenColor(StdDraw.ORANGE); break;
+                    default: StdDraw.setPenColor(StdDraw.BLACK); break;
+                }
+                System.out.println("Do you want the shape to be filled?");
+                int decision = sc.next().charAt(0);
+                int flld = (decision == 'y') ? 1 : 2;
+                fig.print(flld);
             }
-            System.out.println("Do you want the shape to be filled?");
-            int decision = sc.next().charAt(0);
-            int flld = (decision == 'y') ? 1 : 2;
-            fig.print(flld);
-		    System.out.println("Enter shape and sizes or X to exit");
-		    command = sc.next().charAt(0);
-		}
+    	    System.out.println("Enter shape and sizes or press h for help");
+    	    command = sc.next().charAt(0);
+    	}
 	}
-	else {
-	    switch (command){
-	    case 'r': fig = new Rectangle(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-		break;
-	    case 's': fig = new Square(Integer.parseInt(args[1]));
-		break;
-	    }
-	    System.out.println(fig.toString());
-	}
+    public static void help() {
+        System.out.println("HELP REQUIRED");
     }
+}
 
 
 	/* Notice the slight trickery here: because we have a method defined
@@ -194,4 +220,3 @@ public class LabW6Sol {
 	if (args.length > 0) {
 	    System.out.println(args[0]);}
     } */
-}
