@@ -17,7 +17,7 @@ abstract class Figure {
     public Color getColor() {return color;}
     public abstract double area();
     public abstract String toString();
-    public abstract void print(char font);
+    public abstract void print(int format);
 }
 
 // We create protected data fields below so that subclasses can access them directly
@@ -29,30 +29,18 @@ abstract class Figure {
 class Triangle extends Figure {
     protected int side1;
     protected int side2;
-    protected double side3;
+    protected int side3;
 
-    public Triangle(int s1, int s2) {
+    public Triangle(int s1, int s2, int s3) {
       side1 = s1;
       side2 = s2;
-      side3 = Math.sqrt((s1*s1)+(s2*s2));
+      side3 = s3;
     }
 
     public double area() {return ((side1 * side2)/2);}
     public String toString() {return ("triangle of hypothenuse "+side3);}
-    public void print(char font){
-        System.out.println("");
-        System.out.println(font);
-        for (int i = 0; i<(side1-2); i++) {
-          System.out.print(font);
-          for (int j = 0; j<i; j++){
-            System.out.print(" ");
-          }
-          System.out.println(font);
-        }
-        for (int k = 0; k < (side2); k++){
-          System.out.print(font);
-        }
-        System.out.println("");
+    public void print(int format){
+        System.out.println("Working");
     }
 }
 
@@ -66,15 +54,17 @@ class Rectangle extends Figure {
 
     public double area() {return height * width;}
     public String toString() {return ("rectangle of height "+height);}
-    public void print(char font){
-        System.out.println("");
-        for (int i = 0; i < this.height; i++) {
-            for (int j = 0; j < (this.width-1); j++) {
-                System.out.print(font + " ");
-            }
-            System.out.println(font);
+    public void print(int format){
+        if (format == 1) {
+            StdDraw.clear();
+            StdDraw.setPenRadius(0.01);
+            StdDraw.filledRectangle(0.5, 0.5, (this.width/20f), (this.height/20f));
         }
-        System.out.println("");
+        else {
+            StdDraw.clear();
+            StdDraw.setPenRadius(0.01);
+            StdDraw.rectangle(0.5, 0.5, (this.width/20f), (this.height/20f));
+        }
     }
 }
 
@@ -107,8 +97,17 @@ class Ellipse extends Figure {
 
     public double area() {return Math.PI * axis1 * axis2;}
     public String toString() {return ("ellipse of axis "+ axis1 + " and "+ axis2);}
-    public void print(char font){
-        System.out.println("PRINTING NOT YET IMPLEMENTED.");
+    public void print(int format){
+        if (format ==  1) {
+            StdDraw.clear();
+            StdDraw.setPenRadius(0.01);
+            StdDraw.filledEllipse(0.5, 0.5, (this.axis1/20f), (this.axis2/20f));
+        }
+        else {
+            StdDraw.clear();
+            StdDraw.setPenRadius(0.01);
+            StdDraw.ellipse(0.5, 0.5, (this.axis1/20f), (this.axis2/20f));
+        }
     }
 }
 
@@ -135,24 +134,36 @@ public class LabW6Sol {
 	Figure fig =  new Circle(25);
 
 	char command = args[0].charAt(0);
-    char font;
 
 	if (command == 'i'){
-		System.out.println("Enter r int int or s int, or x to exit ");
+		System.out.println("Enter shape and sizes or 'X' to exit");
 		command = sc.next().charAt(0);
 		while (command != 'x') {
 		    switch (command) {
 		    case 'r': fig = new Rectangle(sc.nextInt(),sc.nextInt()); break;
 		    case 's': fig = new Square(sc.nextInt()); break;
-        case 'e': fig = new Ellipse(sc.nextInt(),sc.nextInt()); break;
-        case 'c': fig = new Circle(sc.nextInt()); break;
-        case 't': fig = new Triangle(sc.nextInt(),sc.nextInt()); break;
+            case 'e': fig = new Ellipse(sc.nextInt(),sc.nextInt()); break;
+            case 'c': fig = new Circle(sc.nextInt()); break;
+            case 't': fig = new Triangle(sc.nextInt(),sc.nextInt(),sc.nextInt()); break;
 		    }
 		    System.out.println(fig.toString());
-            System.out.println("What character do you wish to print?");
-            font = sc.next().charAt(0);
-            fig.print(font);
-		    System.out.println("Enter r int int or s int, or x to exit ");
+            System.out.println("Choose the color of the shape");
+            char clr = sc.next().charAt(0);
+            switch (clr) {
+                case 'b': StdDraw.setPenColor(StdDraw.BLUE); break;
+                case 'r': StdDraw.setPenColor(StdDraw.RED); break;
+                case 'p': StdDraw.setPenColor(StdDraw.PINK); break;
+                case 'y': StdDraw.setPenColor(StdDraw.YELLOW); break;
+                case 'w': StdDraw.setPenColor(StdDraw.WHITE); break;
+                case 'g': StdDraw.setPenColor(StdDraw.GREEN); break;
+                case 'o': StdDraw.setPenColor(StdDraw.ORANGE); break;
+                default: StdDraw.setPenColor(StdDraw.BLACK); break;
+            }
+            System.out.println("Do you want the shape to be filled?");
+            int decision = sc.next().charAt(0);
+            int flld = (decision == 'y') ? 1 : 2;
+            fig.print(flld);
+		    System.out.println("Enter shape and sizes or X to exit");
 		    command = sc.next().charAt(0);
 		}
 	}
